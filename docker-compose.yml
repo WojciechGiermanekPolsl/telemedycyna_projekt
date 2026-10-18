@@ -1,0 +1,43 @@
+services:
+  app:
+    build:
+      context: .
+      target: development
+    container_name: telmed-app
+    restart: unless-stopped
+    ports:
+      - "${APP_PORT:-3000}:3000"
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+      DATABASE_URL: mysql://${MYSQL_USER:-telmed}:${MYSQL_PASSWORD:-telmed_password}@mysql:3306/${MYSQL_DATABASE:-telmed}
+    volumes:
+      - .:/app
+      - node_modules:/app/node_modules
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  mysql:
+    image: mysql:8.4
+    container_name: telmed-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-telmed}
+      MYSQL_USER: ${MYSQL_USER:-telmed}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-telmed_password}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root_password}
+    ports:
+      - "${MYSQL_PORT:-3306}:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p$$MYSQL_ROOT_PASSWORD --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  mysql_data:
+  node_modules:

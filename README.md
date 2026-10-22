@@ -63,4 +63,13 @@ docker compose down
 docker compose down --volumes
 ```
 
-`Dockerfile` zawiera etapy `development`, `build` i `production`. Docker Compose korzysta z etapu deweloperskiego. Uruchomienie serwisu `app` wymaga wcześniejszego zainicjalizowania projektu Node.js oraz plików `package.json` i `package-lock.json`.
+Po uruchomieniu stan serwera i połączenia z MySQL można sprawdzić pod adresem `http://localhost:3000/health`. Poprawne połączenie zwraca status HTTP `200` oraz odpowiedź:
+
+```json
+{
+  "status": "ok",
+  "database": "connected"
+}
+```
+
+`Dockerfile` zawiera etapy `development`, `build` i `production`. Docker Compose korzysta z etapu deweloperskiego.

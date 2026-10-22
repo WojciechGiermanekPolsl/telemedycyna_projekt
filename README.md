@@ -31,6 +31,8 @@ Celem projektu jest stworzenie aplikacji wspomagającej planowanie badań i wizy
 
 Dane bazy oraz zależności aplikacji są przechowywane w wolumenach `mysql_data` i `node_modules`. Serwis `app` uruchamia się po pozytywnym wyniku healthchecka MySQL.
 
+Schemat z pliku `database/schema.sql` jest importowany automatycznie podczas pierwszego utworzenia wolumenu MySQL. Zawiera tabele `users`, `appointments`, `recurrence_rules` i `notifications`.
+
 ### Konfiguracja
 
 Lokalną konfigurację należy utworzyć bazując na `.env.example`:

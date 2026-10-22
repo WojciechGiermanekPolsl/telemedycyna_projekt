@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Telmed - rejestracja</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="page-shell">
+      <section class="register-card">
+        <h1>Zarejestruj się</h1>
+
+        <form class="form-grid">
+          <div class="field">
+            <label for="first-name">Imię</label>
+            <input id="first-name" type="text" />
+          </div>
+
+          <div class="field">
+            <label for="last-name">Nazwisko</label>
+            <input id="last-name" type="text" />
+          </div>
+
+          <div class="field">
+            <label for="register-email">Email</label>
+            <input id="register-email" type="email" />
+          </div>
+
+          <div class="field">
+            <label for="register-password">Hasło</label>
+            <input id="register-password" type="password" />
+          </div>
+
+          <div class="field">
+            <label for="confirm-password">Powtórz hasło</label>
+            <input id="confirm-password" type="password" />
+          </div>
+
+          <button class="btn btn-primary" type="submit">Utwórz konto</button>
+        </form>
+
+        <p class="auth-switch">
+          Masz już konto?
+          <a href="login.html">Zaloguj się</a>
+        </p>
+      </section>
+    </main>
+  </body>
+</html>

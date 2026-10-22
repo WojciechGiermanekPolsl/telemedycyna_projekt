@@ -114,3 +114,22 @@ body {
   width: 100%;
   margin-top: 6px;
 }
+
+.form-message {
+  min-height: 20px;
+  margin: 14px 0 0;
+  text-align: center;
+}
+
+.form-message.success {
+  color: #087830;
+}
+
+.form-message.error {
+  color: #b00020;
+}
+
+.form-link {
+  margin: 8px 0 0;
+  text-align: center;
+}

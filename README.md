@@ -72,4 +72,10 @@ Po uruchomieniu stan serwera i połączenia z MySQL można sprawdzić pod adrese
 }
 ```
 
+### Logowanie
+
+Formularz logowania jest dostępny pod adresem `http://localhost:3000/login.html`, a formularz rejestracji pod adresem `http://localhost:3000/register.html`.
+
+Logowanie porównuje podane dane z rekordem w tabeli `users`. Na obecnym etapie hasło jest zapisywane bez hashowania w kolumnie `password_hash`; rozwiązanie jest przeznaczone wyłącznie do lokalnej wersji demonstracyjnej.
+
 `Dockerfile` zawiera etapy `development`, `build` i `production`. Docker Compose korzysta z etapu deweloperskiego.

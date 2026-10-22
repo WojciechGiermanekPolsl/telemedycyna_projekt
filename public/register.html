@@ -11,34 +11,36 @@
       <section class="register-card">
         <h1>Zarejestruj się</h1>
 
-        <form class="form-grid">
+        <form id="register-form" class="form-grid">
           <div class="field">
             <label for="first-name">Imię</label>
-            <input id="first-name" type="text" />
+            <input id="first-name" name="firstName" type="text" required />
           </div>
 
           <div class="field">
             <label for="last-name">Nazwisko</label>
-            <input id="last-name" type="text" />
+            <input id="last-name" name="lastName" type="text" required />
           </div>
 
           <div class="field">
             <label for="register-email">Email</label>
-            <input id="register-email" type="email" />
+            <input id="register-email" name="email" type="email" required />
           </div>
 
           <div class="field">
             <label for="register-password">Hasło</label>
-            <input id="register-password" type="password" />
+            <input id="register-password" name="password" type="password" required />
           </div>
 
           <div class="field">
             <label for="confirm-password">Powtórz hasło</label>
-            <input id="confirm-password" type="password" />
+            <input id="confirm-password" name="confirmPassword" type="password" required />
           </div>
 
           <button class="btn btn-primary" type="submit">Utwórz konto</button>
         </form>
+
+        <p id="message" class="form-message" role="status"></p>
 
         <p class="auth-switch">
           Masz już konto?
@@ -46,5 +48,6 @@
         </p>
       </section>
     </main>
+    <script src="register.js"></script>
   </body>
 </html>

@@ -78,4 +78,17 @@ Formularz logowania jest dostępny pod adresem `http://localhost:3000/login.html
 
 Logowanie porównuje podane dane z rekordem w tabeli `users`. Na obecnym etapie hasło jest zapisywane bez hashowania w kolumnie `password_hash`; rozwiązanie jest przeznaczone wyłącznie do lokalnej wersji demonstracyjnej.
 
+### API
+
+- `GET /api/dashboard?userId=:id` – dane panelu użytkownika,
+- `GET /api/appointments?userId=:id` – lista terminów,
+- `GET /api/appointments/:id?userId=:id` – pojedynczy termin,
+- `POST /api/appointments` – dodanie terminu,
+- `PUT /api/appointments/:id` – edycja terminu,
+- `DELETE /api/appointments/:id?userId=:id` – usunięcie terminu,
+- `GET /api/notifications?userId=:id` – lista powiadomień,
+- `PATCH /api/notifications/:id/read` – oznaczenie powiadomienia jako przeczytane.
+
+Operacje dodawania i edycji terminu zapisują również regułę cykliczności oraz datę przypomnienia, jeżeli zostały podane.
+
 `Dockerfile` zawiera etapy `development`, `build` i `production`. Docker Compose korzysta z etapu deweloperskiego.

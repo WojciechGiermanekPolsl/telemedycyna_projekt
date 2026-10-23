@@ -15,13 +15,15 @@
           <a href="calendar.html">Kalendarz</a>
           <a href="appointments.html">Terminy</a>
           <a href="notifications.html">Powiadomienia</a>
-          <a href="index.html">Wyloguj</a>
+          <a id="logout" href="index.html">Wyloguj</a>
         </nav>
       </div>
     </header>
 
     <main class="container app-page">
       <h1>Powiadomienia</h1>
+
+      <p id="notifications-message" class="form-message" role="status"></p>
 
       <div class="table-wrapper">
         <table class="data-table">
@@ -33,13 +35,15 @@
               <th>Akcje</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody id="notifications-body">
             <tr>
-              <td colspan="4" class="empty-state">Brak powiadomień.</td>
+              <td colspan="4" class="empty-state">Ładowanie...</td>
             </tr>
           </tbody>
         </table>
       </div>
     </main>
+
+    <script src="js/notifications.js"></script>
   </body>
 </html>

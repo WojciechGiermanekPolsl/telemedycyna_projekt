@@ -15,15 +15,17 @@
           <a href="calendar.html">Kalendarz</a>
           <a href="appointments.html">Terminy</a>
           <a href="notifications.html">Powiadomienia</a>
-          <a href="index.html">Wyloguj</a>
+          <a id="logout" href="index.html">Wyloguj</a>
         </nav>
       </div>
     </header>
 
     <main class="container app-page narrow-page">
-      <h1>Dodaj termin</h1>
+      <h1 id="form-title">Dodaj termin</h1>
 
-      <form class="panel form-grid">
+      <p id="appointment-message" class="form-message" role="status"></p>
+
+      <form id="appointment-form" class="panel form-grid">
         <div class="field">
           <label for="event-type">Rodzaj</label>
           <select id="event-type" name="eventType" required>
@@ -63,6 +65,15 @@
           <textarea id="description" name="description" rows="4"></textarea>
         </div>
 
+        <div class="field">
+          <label for="status">Status</label>
+          <select id="status" name="status">
+            <option value="scheduled">Zaplanowany</option>
+            <option value="completed">Zakończony</option>
+            <option value="cancelled">Odwołany</option>
+          </select>
+        </div>
+
         <fieldset>
           <legend>Termin cykliczny</legend>
           <label class="checkbox-field">
@@ -85,6 +96,11 @@
               </select>
             </div>
           </div>
+
+          <div class="field">
+            <label for="recurrence-ends-at">Powtarzaj do</label>
+            <input id="recurrence-ends-at" name="recurrenceEndsAt" type="datetime-local" />
+          </div>
         </fieldset>
 
         <div class="field">
@@ -98,5 +114,7 @@
         </div>
       </form>
     </main>
+
+    <script src="js/appointment-form.js"></script>
   </body>
 </html>

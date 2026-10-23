@@ -15,7 +15,7 @@
           <a href="calendar.html">Kalendarz</a>
           <a href="appointments.html">Terminy</a>
           <a href="notifications.html">Powiadomienia</a>
-          <a href="index.html">Wyloguj</a>
+          <a id="logout" href="index.html">Wyloguj</a>
         </nav>
       </div>
     </header>
@@ -23,8 +23,10 @@
     <main class="container app-page">
       <div class="page-header">
         <h1>Kalendarz</h1>
-        <input aria-label="Wybrany miesiąc" type="month" value="2026-10" />
+        <input id="calendar-month" aria-label="Wybrany miesiąc" type="month" />
       </div>
+
+      <p id="calendar-message" class="form-message" role="status"></p>
 
       <div class="table-wrapper">
         <table class="calendar-table">
@@ -39,15 +41,13 @@
               <th>Nd</th>
             </tr>
           </thead>
-          <tbody>
-            <tr><td></td><td></td><td></td><td>1</td><td>2</td><td>3</td><td>4</td></tr>
-            <tr><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td></tr>
-            <tr><td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td><td>18</td></tr>
-            <tr><td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td></tr>
-            <tr><td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td>31</td><td></td></tr>
+          <tbody id="calendar-body">
+            <tr><td colspan="7" class="empty-state">Ładowanie...</td></tr>
           </tbody>
         </table>
       </div>
     </main>
+
+    <script src="js/calendar.js"></script>
   </body>
 </html>

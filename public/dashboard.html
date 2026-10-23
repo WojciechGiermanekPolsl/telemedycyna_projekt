@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Telmed - panel</title>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="container topbar-inner">
+        <a class="brand" href="dashboard.html">Telmed</a>
+        <nav class="app-nav">
+          <a href="dashboard.html">Panel</a>
+          <a href="calendar.html">Kalendarz</a>
+          <a href="appointments.html">Terminy</a>
+          <a href="notifications.html">Powiadomienia</a>
+          <a href="index.html">Wyloguj</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container app-page">
+      <div class="page-header">
+        <h1>Panel użytkownika</h1>
+        <a class="btn btn-primary" href="appointment-form.html">Dodaj termin</a>
+      </div>
+
+      <div class="summary-grid">
+        <section class="panel">
+          <h2>Najbliższe terminy</h2>
+          <p class="empty-state">Brak zaplanowanych terminów.</p>
+          <a href="appointments.html">Zobacz wszystkie terminy</a>
+        </section>
+
+        <section class="panel">
+          <h2>Powiadomienia</h2>
+          <p class="empty-state">Brak nowych powiadomień.</p>
+          <a href="notifications.html">Zobacz powiadomienia</a>
+        </section>
+      </div>
+    </main>
+  </body>
+</html>

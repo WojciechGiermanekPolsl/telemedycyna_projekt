@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Telmed - formularz terminu</title>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="container topbar-inner">
+        <a class="brand" href="dashboard.html">Telmed</a>
+        <nav class="app-nav">
+          <a href="dashboard.html">Panel</a>
+          <a href="calendar.html">Kalendarz</a>
+          <a href="appointments.html">Terminy</a>
+          <a href="notifications.html">Powiadomienia</a>
+          <a href="index.html">Wyloguj</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container app-page narrow-page">
+      <h1>Dodaj termin</h1>
+
+      <form class="panel form-grid">
+        <div class="field">
+          <label for="event-type">Rodzaj</label>
+          <select id="event-type" name="eventType" required>
+            <option value="control_visit">Wizyta kontrolna</option>
+            <option value="examination">Badanie</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="title">Nazwa</label>
+          <input id="title" name="title" type="text" required />
+        </div>
+
+        <div class="inline-fields">
+          <div class="field">
+            <label for="starts-at">Początek</label>
+            <input id="starts-at" name="startsAt" type="datetime-local" required />
+          </div>
+          <div class="field">
+            <label for="ends-at">Koniec</label>
+            <input id="ends-at" name="endsAt" type="datetime-local" />
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="doctor-name">Lekarz</label>
+          <input id="doctor-name" name="doctorName" type="text" />
+        </div>
+
+        <div class="field">
+          <label for="facility">Placówka</label>
+          <input id="facility" name="facility" type="text" />
+        </div>
+
+        <div class="field">
+          <label for="description">Opis</label>
+          <textarea id="description" name="description" rows="4"></textarea>
+        </div>
+
+        <fieldset>
+          <legend>Termin cykliczny</legend>
+          <label class="checkbox-field">
+            <input name="recurring" type="checkbox" />
+            Powtarzaj termin
+          </label>
+
+          <div class="inline-fields">
+            <div class="field">
+              <label for="interval-value">Powtarzaj co</label>
+              <input id="interval-value" name="intervalValue" type="number" min="1" value="1" />
+            </div>
+            <div class="field">
+              <label for="frequency">Jednostka</label>
+              <select id="frequency" name="frequency">
+                <option value="day">dni</option>
+                <option value="week">tygodnie</option>
+                <option value="month" selected>miesiące</option>
+                <option value="year">lata</option>
+              </select>
+            </div>
+          </div>
+        </fieldset>
+
+        <div class="field">
+          <label for="remind-at">Data przypomnienia</label>
+          <input id="remind-at" name="remindAt" type="datetime-local" />
+        </div>
+
+        <div class="form-actions">
+          <button class="btn btn-primary" type="submit">Zapisz</button>
+          <a class="btn btn-secondary" href="appointments.html">Anuluj</a>
+        </div>
+      </form>
+    </main>
+  </body>
+</html>

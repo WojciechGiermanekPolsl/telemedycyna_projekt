@@ -89,6 +89,6 @@ Logowanie porównuje podane dane z rekordem w tabeli `users`. Na obecnym etapie 
 - `GET /api/notifications?userId=:id` – lista powiadomień,
 - `PATCH /api/notifications/:id/read` – oznaczenie powiadomienia jako przeczytane.
 
-Operacje dodawania i edycji terminu zapisują również regułę cykliczności oraz datę przypomnienia, jeżeli zostały podane.
+Operacje dodawania i edycji terminu zapisują również regułę cykliczności oraz datę przypomnienia, jeżeli zostały podane. Na podstawie zapisanej reguły serwer wylicza kolejne wystąpienia terminu i zwraca je na liście, w kalendarzu oraz na dashboardzie.
 
 `Dockerfile` zawiera etapy `development`, `build` i `production`. Docker Compose korzysta z etapu deweloperskiego.

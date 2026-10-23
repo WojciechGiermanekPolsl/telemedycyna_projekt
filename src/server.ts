@@ -15,6 +15,24 @@ interface AppointmentOwnerRow extends RowDataPacket {
   recurrence_rule_id: number | null;
 }
 
+type Frequency = 'day' | 'week' | 'month' | 'year';
+
+interface AppointmentRow extends RowDataPacket {
+  id: number;
+  startsAt: string;
+  endsAt: string | null;
+  frequency: Frequency | null;
+  intervalValue: number | null;
+  recurrenceEndsAt: string | null;
+  remindAt: string | null;
+}
+
+type AppointmentOccurrence = AppointmentRow & {
+  occurrenceId: string;
+  occurrenceIndex: number;
+  isRecurringOccurrence: boolean;
+};
+
 const appointmentSelect = `
   SELECT
     a.id,
@@ -64,6 +82,103 @@ function validStatus(value: unknown): value is 'scheduled' | 'completed' | 'canc
 
 function validFrequency(value: unknown): value is 'day' | 'week' | 'month' | 'year' {
   return value === 'day' || value === 'week' || value === 'month' || value === 'year';
+}
+
+function parseAppointmentDate(value: string | null | undefined): Date | null {
+  if (!value) {
+    return null;
+  }
+
+  const normalized = value.length === 16 ? `${value}:00Z` : `${value.replace(' ', 'T')}Z`;
+  const date = new Date(normalized);
+  return Number.isNaN(date.getTime()) ? null : date;
+}
+
+function formatAppointmentDate(date: Date): string {
+  return date.toISOString().slice(0, 16);
+}
+
+function occurrenceDate(baseDate: Date, frequency: Frequency, amount: number): Date {
+  if (frequency === 'day' || frequency === 'week') {
+    const days = frequency === 'week' ? amount * 7 : amount;
+    return new Date(baseDate.getTime() + days * 24 * 60 * 60 * 1000);
+  }
+
+  const originalDay = baseDate.getUTCDate();
+  const targetMonthNumber = frequency === 'year'
+    ? baseDate.getUTCFullYear() * 12 + baseDate.getUTCMonth() + amount * 12
+    : baseDate.getUTCFullYear() * 12 + baseDate.getUTCMonth() + amount;
+  const targetYear = Math.floor(targetMonthNumber / 12);
+  const targetMonth = targetMonthNumber % 12;
+  const lastDayOfMonth = new Date(Date.UTC(targetYear, targetMonth + 1, 0)).getUTCDate();
+
+  return new Date(Date.UTC(
+    targetYear,
+    targetMonth,
+    Math.min(originalDay, lastDayOfMonth),
+    baseDate.getUTCHours(),
+    baseDate.getUTCMinutes(),
+  ));
+}
+
+function expandAppointments(
+  appointments: AppointmentRow[],
+  rangeFrom: Date | null = null,
+  rangeTo: Date | null = null,
+): AppointmentOccurrence[] {
+  const defaultHorizon = new Date();
+  defaultHorizon.setUTCFullYear(defaultHorizon.getUTCFullYear() + 1);
+  const expanded: AppointmentOccurrence[] = [];
+
+  for (const appointment of appointments) {
+    const baseStart = parseAppointmentDate(appointment.startsAt);
+    if (!baseStart) {
+      continue;
+    }
+
+    const baseEnd = parseAppointmentDate(appointment.endsAt);
+    const duration = baseEnd ? baseEnd.getTime() - baseStart.getTime() : null;
+    const recurrenceEnd = parseAppointmentDate(appointment.recurrenceEndsAt);
+    const requestedEnd = rangeTo || defaultHorizon;
+    const generationEnd = recurrenceEnd
+      ? new Date(Math.min(requestedEnd.getTime(), recurrenceEnd.getTime()))
+      : requestedEnd;
+    const interval = Math.max(1, Number(appointment.intervalValue) || 1);
+    const maximumOccurrences = appointment.frequency ? 10000 : 1;
+    const effectiveRangeFrom = rangeFrom || (appointment.frequency ? new Date() : null);
+
+    for (let index = 0; index < maximumOccurrences; index += 1) {
+      const start = appointment.frequency
+        ? occurrenceDate(baseStart, appointment.frequency, interval * index)
+        : baseStart;
+
+      if (index > 0 && start > generationEnd) {
+        break;
+      }
+
+      const includeBaseAppointment = index === 0 && !rangeFrom;
+      const isInRange = includeBaseAppointment || (
+        (!effectiveRangeFrom || start >= effectiveRangeFrom) && (!rangeTo || start < rangeTo)
+      );
+      if (isInRange) {
+        expanded.push({
+          ...appointment,
+          startsAt: formatAppointmentDate(start),
+          endsAt: duration === null ? null : formatAppointmentDate(new Date(start.getTime() + duration)),
+          remindAt: index === 0 ? appointment.remindAt : null,
+          occurrenceId: `${appointment.id}-${index}`,
+          occurrenceIndex: index,
+          isRecurringOccurrence: index > 0,
+        });
+      }
+
+      if (!appointment.frequency) {
+        break;
+      }
+    }
+  }
+
+  return expanded.sort((first, second) => first.startsAt.localeCompare(second.startsAt));
 }
 
 const port = Number(process.env.PORT ?? 3000);
@@ -160,13 +275,14 @@ app.get('/api/dashboard', async (request, response) => {
       [userId],
     );
 
-    const [appointments] = await pool.execute<RowDataPacket[]>(
+    const [baseAppointments] = await pool.execute<AppointmentRow[]>(
       `${appointmentSelect}
-       WHERE a.user_id = ? AND a.status = 'scheduled' AND a.starts_at >= CURRENT_TIMESTAMP
-       ORDER BY a.starts_at
-       LIMIT 5`,
+       WHERE a.user_id = ? AND a.status = 'scheduled'
+       ORDER BY a.starts_at`,
       [userId],
     );
+    const now = new Date();
+    const appointments = expandAppointments(baseAppointments, now).slice(0, 5);
     const [notifications] = await pool.execute<RowDataPacket[]>(
       `SELECT
          n.id,
@@ -207,24 +323,22 @@ app.get('/api/appointments', async (request, response) => {
     conditions.push('a.status = ?');
     parameters.push(request.query.status);
   }
-  if (typeof request.query.from === 'string') {
-    conditions.push('a.starts_at >= ?');
-    parameters.push(sqlDate(request.query.from) || request.query.from);
-  }
-  if (typeof request.query.to === 'string') {
-    conditions.push('a.starts_at < ?');
-    parameters.push(sqlDate(request.query.to) || request.query.to);
-  }
+  const rangeFrom = typeof request.query.from === 'string'
+    ? parseAppointmentDate(request.query.from)
+    : null;
+  const rangeTo = typeof request.query.to === 'string'
+    ? parseAppointmentDate(request.query.to)
+    : null;
 
   try {
-    const [appointments] = await pool.execute<RowDataPacket[]>(
+    const [baseAppointments] = await pool.execute<AppointmentRow[]>(
       `${appointmentSelect}
        WHERE ${conditions.join(' AND ')}
        ORDER BY a.starts_at`,
       parameters,
     );
 
-    response.json(appointments);
+    response.json(expandAppointments(baseAppointments, rangeFrom, rangeTo));
   } catch (error) {
     console.error(error);
     response.status(500).json({ error: 'Nie udało się pobrać terminów' });
@@ -241,7 +355,7 @@ app.get('/api/appointments/:id', async (request, response) => {
   }
 
   try {
-    const [appointments] = await pool.execute<RowDataPacket[]>(
+    const [appointments] = await pool.execute<AppointmentRow[]>(
       `${appointmentSelect}
        WHERE a.id = ? AND a.user_id = ?
        LIMIT 1`,

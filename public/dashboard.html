@@ -15,30 +15,41 @@
           <a href="calendar.html">Kalendarz</a>
           <a href="appointments.html">Terminy</a>
           <a href="notifications.html">Powiadomienia</a>
-          <a href="index.html">Wyloguj</a>
+          <a id="logout" href="index.html">Wyloguj</a>
         </nav>
       </div>
     </header>
 
     <main class="container app-page">
       <div class="page-header">
-        <h1>Panel użytkownika</h1>
+        <div>
+          <h1>Panel użytkownika</h1>
+          <p id="welcome"></p>
+        </div>
         <a class="btn btn-primary" href="appointment-form.html">Dodaj termin</a>
       </div>
+
+      <p id="dashboard-message" class="form-message" role="status"></p>
 
       <div class="summary-grid">
         <section class="panel">
           <h2>Najbliższe terminy</h2>
-          <p class="empty-state">Brak zaplanowanych terminów.</p>
+          <div id="appointments-list">
+            <p class="empty-state">Ładowanie...</p>
+          </div>
           <a href="appointments.html">Zobacz wszystkie terminy</a>
         </section>
 
         <section class="panel">
           <h2>Powiadomienia</h2>
-          <p class="empty-state">Brak nowych powiadomień.</p>
+          <div id="notifications-list">
+            <p class="empty-state">Ładowanie...</p>
+          </div>
           <a href="notifications.html">Zobacz powiadomienia</a>
         </section>
       </div>
     </main>
+
+    <script src="js/dashboard.js"></script>
   </body>
 </html>

@@ -7,13 +7,23 @@ form.addEventListener('submit', async (event) => {
   message.className = 'form-message';
 
   const data = Object.fromEntries(new FormData(form));
-  const response = await fetch('/auth/login', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
-  });
-  const result = await response.json();
+  try {
+    const response = await fetch('/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    const result = await response.json();
 
-  message.textContent = result.message ?? result.error;
-  message.className = response.ok ? 'form-message success' : 'form-message error';
+    message.textContent = result.message ?? result.error;
+    message.className = response.ok ? 'form-message success' : 'form-message error';
+
+    if (response.ok && result.user) {
+      localStorage.setItem('telmedUser', JSON.stringify(result.user));
+      window.location.assign('/dashboard.html');
+    }
+  } catch {
+    message.textContent = 'Nie udało się połączyć z serwerem';
+    message.className = 'form-message error';
+  }
 });

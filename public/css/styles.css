@@ -231,6 +231,15 @@ body {
   margin-top: 0;
 }
 
+.simple-list {
+  margin: 0 0 18px;
+  padding-left: 20px;
+}
+
+.simple-list li {
+  margin-bottom: 8px;
+}
+
 .empty-state {
   color: #555;
   text-align: center;

@@ -63,6 +63,12 @@ body {
   font-size: 1rem;
 }
 
+.btn-small {
+  margin: 2px;
+  padding: 5px 9px;
+  font-size: 0.85rem;
+}
+
 .main-box {
   min-height: calc(100vh - 60px);
   display: flex;

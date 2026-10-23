@@ -15,7 +15,7 @@
           <a href="calendar.html">Kalendarz</a>
           <a href="appointments.html">Terminy</a>
           <a href="notifications.html">Powiadomienia</a>
-          <a href="index.html">Wyloguj</a>
+          <a id="logout" href="index.html">Wyloguj</a>
         </nav>
       </div>
     </header>
@@ -25,6 +25,8 @@
         <h1>Wizyty i badania</h1>
         <a class="btn btn-primary" href="appointment-form.html">Dodaj termin</a>
       </div>
+
+      <p id="appointments-message" class="form-message" role="status"></p>
 
       <div class="table-wrapper">
         <table class="data-table">
@@ -37,13 +39,15 @@
               <th>Akcje</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody id="appointments-body">
             <tr>
-              <td colspan="5" class="empty-state">Brak zapisanych terminów.</td>
+              <td colspan="5" class="empty-state">Ładowanie...</td>
             </tr>
           </tbody>
         </table>
       </div>
     </main>
+
+    <script src="js/appointments.js"></script>
   </body>
 </html>

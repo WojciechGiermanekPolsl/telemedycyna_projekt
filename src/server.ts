@@ -84,6 +84,10 @@ function validFrequency(value: unknown): value is 'day' | 'week' | 'month' | 'ye
   return value === 'day' || value === 'week' || value === 'month' || value === 'year';
 }
 
+function validAppointmentPeriod(startsAt: string, endsAt: string | null): boolean {
+  return !endsAt || endsAt > startsAt;
+}
+
 function parseAppointmentDate(value: string | null | undefined): Date | null {
   if (!value) {
     return null;
@@ -384,6 +388,11 @@ app.post('/api/appointments', async (request, response) => {
     return;
   }
 
+  if (!validAppointmentPeriod(startsAt, endsAt)) {
+    response.status(400).json({ error: 'Data zakończenia musi być późniejsza niż data rozpoczęcia' });
+    return;
+  }
+
   const connection = await pool.getConnection();
 
   try {
@@ -446,6 +455,11 @@ app.put('/api/appointments/:id', async (request, response) => {
 
   if (!userId || !validAppointmentType(request.body.eventType) || !request.body.title || !startsAt) {
     response.status(400).json({ error: 'Nieprawidłowe dane terminu' });
+    return;
+  }
+
+  if (!validAppointmentPeriod(startsAt, endsAt)) {
+    response.status(400).json({ error: 'Data zakończenia musi być późniejsza niż data rozpoczęcia' });
     return;
   }
 

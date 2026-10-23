@@ -32,6 +32,12 @@ form.addEventListener('submit', async (event) => {
   data.userId = user.id;
   data.recurring = form.elements.recurring.checked;
 
+  if (data.endsAt && data.endsAt <= data.startsAt) {
+    message.textContent = 'Data zakończenia musi być późniejsza niż data rozpoczęcia';
+    message.className = 'form-message error';
+    return;
+  }
+
   const url = appointmentId ? `/api/appointments/${appointmentId}` : '/api/appointments';
   const method = appointmentId ? 'PUT' : 'POST';
 
